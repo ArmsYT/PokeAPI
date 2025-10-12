@@ -1,4 +1,4 @@
-# Pokémon API – Cartes 3D Hover (CSS pur)
+# Pokémon API
 
 ---
 
