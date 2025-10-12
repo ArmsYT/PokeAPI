@@ -4,7 +4,6 @@
 
 ## ✨ Fonctionnalités
 
-- **Cartes 3D hover** (CSS pur), format élargi
 - **Modal détaillé** : sprites *Normal*, *Shiny*, formes, **Méga** et **GigaMax**
 - **Types / résistances / faiblesses** avec icônes + infobulles
 - **Stats de base**, talents & évolutions
