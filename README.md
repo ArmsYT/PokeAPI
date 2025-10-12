@@ -23,7 +23,7 @@
 ├── README.md # Read me du projet
 ├── LICENSE # License MIT
 ├── src/
-│    └── css/
+│    ├── css/
 │    │    ├── tokens.css # variables / design tokens
 │    │    ├── base.css # reset & fond
 │    │    ├── toolbar.css # barre d’outils (top)
