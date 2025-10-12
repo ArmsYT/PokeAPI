@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>À propos — Pokémon API | Arms</title>
+        <link rel="shortcut icon" href="../img/pokeball.png" type="image/x-icon">
+        <!-- Styles globaux de l’app -->
+        <link rel="stylesheet" href="../css/tokens.css">
+        <link rel="stylesheet" href="../css/base.css">
+        <link rel="stylesheet" href="../css/toolbar.css">
+        <link rel="stylesheet" href="../css/grid.css">
+        <link rel="stylesheet" href="../css/card.css">
+        <link rel="stylesheet" href="../css/details.css">
+        <link rel="stylesheet" href="../css/modal.css">
+        <link rel="stylesheet" href="../css/responsive.css">
+        <link rel="stylesheet" href="../css/sidebar.css">
+    </head>
+    <style>
+        .content{display:grid;gap:18px}
+        .card-doc{padding:16px;border:1px solid var(--border);background:rgba(255,255,255,.03);border-radius:12px}
+        .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+        @media (max-width:860px){.two-col{grid-template-columns:1fr}}
+        .kvl{display:grid;gap:6px}
+        .kvl dt{color:var(--muted);font-weight:700}
+        .kvl dd{margin:0;font-weight:900}
+        .list{margin:0;padding-left:1.25rem}
+        .muted{color:var(--muted)}
+        .footer{margin-top:24px;color:var(--muted);font-size:.9rem}
+    </style>
+    <body>
+        <!-- Sidebar réutilisable (facultatif) -->
+        <aside id="sidebar" class="sidebar" data-github="ArmsYT">
+            <div class="sb-group">
+                <div class="sb-title">Actions</div>
+                <div class="sb-actions">
+                    <a href="https://tyradex.vercel.app/" class="sb-btn" style="text-decoration: none; text-align: center;">Lien vers l'API</a>
+                </div>
+            </div>
+            <div class="sb-group">
+                <div class="sb-title">Navigation</div>
+                    <div class="sb-actions">
+                        <a class="sb-btn" href="../../index.html">← Retour aux cartes</a>
+                        <a class="sb-btn" href="changelog.html">Changelog</a>
+                    </div>
+                </div>
+                <div class="sb-spacer"></div>
+                <div class="gh-card" aria-live="polite">
+                <a id="ghwAvatar" class="gh-avatar-wrap" href="#" target="_blank" rel="noopener">
+                    <img id="ghAvatar" alt="Avatar GitHub" />
+                </a>
+                <div class="gh-info">
+                    <a id="ghLink" class="gh-name" href="#" target="_blank" rel="noopener">—</a>
+                    <div id="ghMeta" class="gh-meta">—</div>
+                </div>
+            </div>
+            <div class="gh-credits">Made by <a id="ghwName" href="#" target="_blank" rel="noopener">—</a></div>
+        </aside>
+
+        <main class="wrap">
+            <section class="content">
+                <article class="card-doc">
+                    <h2>Objectif</h2>
+                    <p>Ce site propose une galerie de cartes Pokémon responsive, fiche détaillée dans un modal fluide, pagination, recherche temps réel (par ID et nom), et une sidebar d’actions rapides. Il est conçu en HTML/CSS/JS “vanilla”, en s’appuyant sur l’API publique <strong>TyraDex</strong>.</p>
+                </article>
+
+                <article class="card-doc two-col">
+                    <div>
+                        <h2>Fonctionnalités</h2>
+                        <ul class="list">
+                            <li>Grille responsive, cartes élargies avec informations clés</li>
+                            <li>Modal de détails (sprites <em>Normal</em>, <em>Shiny</em>, formes, Méga, GigaMax)</li>
+                            <li>Badges de types, résistances/faiblesses avec icônes</li>
+                            <li>Recherche live (ID et nom), pagination 10/25/50/100/Tout</li>
+                            <li>Sidebar fixe : actions, filtres (extensibles), carte GitHub</li>
+                            <li>Accessibilité : navigation clavier, aria-labels, focus visible</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h2>Stack & organisation</h2>
+                        <dl class="kvl">
+                            <dt>Données</dt><dd>API TyraDex (pokémon, sprites, types, stats…)</dd>
+                            <dt>Front</dt><dd>HTML sémantique, CSS modulaire, JS en modules ES</dd>
+                            <dt>Modules</dt><dd>Sidebar, Pagination, Barre de recherche, Modal, Informations précise sur le pokemon (Types, Images, Nom, Resistances/Faiblesses)</dd>
+                            <dt>Perf</dt><dd>Images lazy, rendering par fragments, fallback offline</dd>
+                        </dl>
+                    </div>
+                </article>
+
+                <article class="card-doc">
+                    <h2>Crédits</h2>
+                    <p>Données : <span class="muted">TyraDex</span> • Design/Code : <a href="#" id="creditsLink">Auteur</a> • Icônes de type : images publiques TyraDex.</p>
+                </article>
+
+
+            <p class="footer">© <span id="year"></span> — Projet non officiel. Pokémon et les noms associés sont des marques déposées de leurs détenteurs respectifs.</p>
+            </section>
+        </main>
+
+        <script type="module" src="../js/sidebar.js"></script>
+    </body>
+</html>

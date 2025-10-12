@@ -390,7 +390,7 @@ details.details>summary::after {
   padding: 0 12px 12px;
   margin: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
   gap: 6px;
   overflow-x: hidden;
   min-width: 0
@@ -399,12 +399,11 @@ details.details>summary::after {
 .resist li {
   font-size: .75rem;
   padding: 4px 6px;
-  border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, .08);
   background: rgba(255, 255, 255, .04);
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   gap: 6px;
   min-width: 0
 }
@@ -417,6 +416,42 @@ details.details>summary::after {
 }
 
 .res-icon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px
+}
+
+.type-list {
+  list-style: none;
+  padding: 0 12px 12px;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 6px;
+  overflow-x: hidden;
+  min-width: 0
+}
+
+.type-list li {
+  font-size: .75rem;
+  padding: 4px 6px;
+  border: 1px solid rgba(255, 255, 255, .08);
+  background: rgba(255, 255, 255, .04);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0
+}
+
+
+.type-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0
+}
+
+.type-icon {
   width: 18px;
   height: 18px;
   flex: 0 0 18px
@@ -534,6 +569,43 @@ details.details>summary::after {
   padding: 12px 14px 16px
 }
 
+/* Scrollbar du contenu du modal */
+.modal__body{
+  scrollbar-gutter: stable;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(148,163,184,.55) rgba(255,255,255,.05); /* thumb | track */
+}
+
+/* WebKit (Chrome, Edge, Safari) */
+.modal__body::-webkit-scrollbar{
+  width: 10px;
+}
+
+.modal__body::-webkit-scrollbar-track{
+  background: rgba(255,255,255,.05);
+  border-radius: 10px;
+}
+
+.modal__body::-webkit-scrollbar-thumb{
+  background: linear-gradient(180deg, rgba(148,163,184,.65), rgba(148,163,184,.45));
+  border-radius: 999px;
+  border: 2px solid transparent;      /* pour l’effet “padding” */
+  background-clip: padding-box;
+}
+
+.modal__body::-webkit-scrollbar-thumb:hover{
+  background: linear-gradient(180deg, rgba(226,232,240,.85), rgba(148,163,184,.65));
+}
+
+.modal__body::-webkit-scrollbar-thumb:active{
+  background: linear-gradient(180deg, rgba(226,232,240,1), rgba(148,163,184,.75));
+}
+
+.modal__body::-webkit-scrollbar-corner{
+  background: transparent;
+}
+
+
 .variants {
   margin: 0 0 12px;
   display: grid;
@@ -585,4 +657,66 @@ details.details>summary::after {
   height: 180px;
   object-fit: contain;
   filter: drop-shadow(0 14px 20px rgba(0, 0, 0, .35));
+}
+
+/* Barre de recherche par ID (toolbar) */
+.toolbar-left .searchbar{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.toolbar-left .searchbar label{
+  font-weight:900;
+  color:var(--muted);
+}
+
+#searchId{
+  appearance: textfield;       /* Firefox */
+  -moz-appearance: textfield;  /* Firefox (old) */
+  background:#0b1220;
+  color:var(--ink);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:8px 10px;
+  font-weight:800;
+  line-height:1;
+  width:120px;                 /* largeur compacte */
+  max-width:160px;
+  outline:none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+#searchId::placeholder{
+  color:var(--muted);
+  opacity:.85;
+}
+
+/* Retire les flèches de l’input number (Chrome/Safari/Edge) */
+#searchId::-webkit-outer-spin-button,
+#searchId::-webkit-inner-spin-button{
+  -webkit-appearance: none;
+  margin:0;
+}
+
+/* Focus state */
+#searchId:focus{
+  border-color:#60a5fa;
+  box-shadow:0 0 0 2px rgba(56,189,248,.25);
+}
+
+/* Désactivé */
+#searchId:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}
+
+/* Le bouton utilise déjà .btn, on ajuste juste l’alignement si besoin */
+.searchbar .btn{
+  height:36px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px 12px;
 }

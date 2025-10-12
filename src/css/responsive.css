@@ -1,0 +1,3 @@
+@media (max-width:520px){
+  .info-grid{ grid-template-columns: 1fr; }
+}

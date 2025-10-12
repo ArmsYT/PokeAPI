@@ -1,0 +1,31 @@
+* { box-sizing: border-box }
+
+html, body { height: 100% }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font: 14px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu;
+  background: var(--bg);
+  position: relative;
+  min-height: 100vh;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(1200px 800px at 12% -10%, rgba(99, 102, 241, .22), transparent 55%),
+    radial-gradient(1200px 800px at 110% 0%, rgba(56, 189, 248, .18), transparent 55%);
+}
+
+.wrap { max-width: 1200px; margin: auto; padding: 24px }
+
+h1 {
+  margin: 0 0 16px;
+  font-size: clamp(1.2rem, 1rem + 1.2vw, 1.6rem);
+  letter-spacing: -.01em
+}

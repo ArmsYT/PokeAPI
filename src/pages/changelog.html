@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Changelog — Pokémon API | Arms</title>
+        <link rel="shortcut icon" href="../img/pokeball.png" type="image/x-icon">
+        <!-- Styles globaux -->
+        <link rel="stylesheet" href="../css/tokens.css">
+        <link rel="stylesheet" href="../css/base.css">
+        <link rel="stylesheet" href="../css/toolbar.css">
+        <link rel="stylesheet" href="../css/grid.css">
+        <link rel="stylesheet" href="../css/card.css">
+        <link rel="stylesheet" href="../css/details.css">
+        <link rel="stylesheet" href="../css/modal.css">
+        <link rel="stylesheet" href="../css/responsive.css">
+        <link rel="stylesheet" href="../css/sidebar.css">
+    </head>
+    <style>
+        .log{display:grid;gap:16px}
+        .entry{padding:16px;border:1px solid var(--border);background:rgba(255,255,255,.03);border-radius:12px}
+        .entry h2{margin:.2rem 0 .6rem}
+        .entry time{color:var(--muted);font-weight:700}
+        .badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+        .badge{font-size:.75rem;padding:3px 8px;border:1px solid var(--border);border-radius:999px;background:#0b1220;font-weight:800}
+        .list{margin:0;padding-left:1.25rem}
+    </style>
+    <body>
+        <aside id="sidebar" class="sidebar" data-github="ArmsYT">
+            <div class="sb-group">
+                <div class="sb-title">Actions</div>
+                <div class="sb-actions">
+                    <a href="https://tyradex.vercel.app/" class="sb-btn" style="text-decoration: none; text-align: center;">Lien vers l'API</a>
+                </div>
+            </div>
+            <div class="sb-group">
+                <div class="sb-title">Navigation</div>
+                    <div class="sb-actions">
+                        <a class="sb-btn" href="../../index.html">← Retour aux cartes</a>
+                        <a class="sb-btn" href="about.html">À propos</a>
+                    </div>
+                </div>
+                <div class="sb-spacer"></div>
+                <div class="gh-card" aria-live="polite">
+                <a id="ghwAvatar" class="gh-avatar-wrap" href="#" target="_blank" rel="noopener">
+                    <img id="ghAvatar" alt="Avatar GitHub" />
+                </a>
+                <div class="gh-info">
+                    <a id="ghLink" class="gh-name" href="#" target="_blank" rel="noopener">—</a>
+                    <div id="ghMeta" class="gh-meta">—</div>
+                </div>
+            </div>
+            <div class="gh-credits">Made by <a id="ghwName" href="#" target="_blank" rel="noopener">—</a></div>
+        </aside>
+
+        <main class="wrap">
+            <section class="log" aria-label="Historique des versions">
+                <article class="entry">
+                    <h2>v1.0.1 <time datetime="2025-10-12">12/10/2025</time></h2>
+                    <ul class="list">
+                        <li>Ajout de la sidebar</li>
+                        <li>Ajout des pages respectifs et du À propos du site</li>
+                    </ul>
+                </article>
+
+                <article class="entry">
+                    <h2>v1.0.0 <time datetime="2025-10-12">12/10/2025</time></h2>
+                    <ul class="list">
+                        <li>Grille responsive + cartes élargies (badges de types, infos de base)</li>
+                        <li>Modal de détails fluide (sprites Normal/Shiny, Méga, GigaMax, formes)</li>
+                        <li>Recherche en temps réel (ID + nom), pagination 10/25/50/100/Tout</li>
+                        <li>Affichage des résistances/faiblesses avec icônes de type</li>
+                        <li>Stats de base en grille (3 par ligne), talents/evolutions au format “liste markdown”</li>
+                        <li>Scrollbar custom dans le modal, accessibilité clavier + aria</li>
+                        <li>Sidebar fixe (actions rapides, tailles de page, aléatoire, scroll) + carte GitHub</li>
+                        <li>Refactor en modules ES (utils, types, sprites, dom, cards, modal, details, search, pagination, sidebar)</li>
+                        <li>Première intégration des cartes et de l’API TyraDex</li>
+                        <li>Base CSS (tokens, carte, grille) et premier modal</li>
+                    </ul>
+                </article>
+            </section>
+        </main>
+
+        <script type="module" src="../js/sidebar.js"></script>
+    </body>
+</html>

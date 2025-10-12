@@ -1,56 +1,89 @@
 <!doctype html>
 <html lang="fr">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pokémon – Cartes 3D Hover (CSS pur)</title>
-  <link rel="shortcut icon" href="src/img/pokeball.png" type="image/x-icon">
-  <link rel="stylesheet" href="src/style.css">
-</head>
-<body>
-  <main class="wrap">
-    <h1>Pokémon – Cartes 3D Hover (CSS pur) – élargies avec infos</h1>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Pokémon API | Arms</title>
+        <link rel="shortcut icon" href="src/img/pokeball.png" type="image/x-icon">
+        <link rel="stylesheet" href="src/css/sidebar.css">
+        <link rel="stylesheet" href="src/css/tokens.css">
+        <link rel="stylesheet" href="src/css/base.css">
+        <link rel="stylesheet" href="src/css/toolbar.css">
+        <link rel="stylesheet" href="src/css/card.css">
+        <link rel="stylesheet" href="src/css/details.css">
+        <link rel="stylesheet" href="src/css/modal.css">
+        <link rel="stylesheet" href="src/css/responsive.css">
+    </head>
+    <body>
+        <aside id="sidebar" class="sidebar" data-github="ArmsYT">
+            <div class="sb-group">
+                <div class="sb-title">Actions</div>
+                <div class="sb-actions">
+                    <a href="https://tyradex.vercel.app/" class="sb-btn" style="text-decoration: none; text-align: center;">Lien vers l'API</a>
+                </div>
+            </div>
+            <div class="sb-group">
+                <div class="sb-title">Navigation</div>
+                    <div class="sb-actions">
+                        <a class="sb-btn" href="src/pages/about.html">À propos</a>
+                        <a class="sb-btn" href="src/pages/changelog.html">Changelog</a>
+                    </div>
+                </div>
+                <div class="sb-spacer"></div>
+                <div class="gh-card" aria-live="polite">
+                <a id="ghwAvatar" class="gh-avatar-wrap" href="#" target="_blank" rel="noopener">
+                    <img id="ghAvatar" alt="Avatar GitHub" />
+                </a>
+                <div class="gh-info">
+                    <a id="ghLink" class="gh-name" href="#" target="_blank" rel="noopener">—</a>
+                    <div id="ghMeta" class="gh-meta">—</div>
+                </div>
+            </div>
+            <div class="gh-credits">Made by <a id="ghwName" href="#" target="_blank" rel="noopener">—</a> <a href="https://github.com/ArmsYT/PokeAPI/blob/main/LICENSE">&copy; MIT LICENSE</a></div>
+        </aside>
+        <main class="wrap">
+            <h1><a href="https://tyradex.vercel.app/" target="_blank" style="color: white; text-decoration: none;">Pokémon API</a></h1>
+            <div class="toolbar" role="region" aria-label="Contrôles de pagination">
+                <div class="toolbar-left">
+                    <div class="searchbar">
+                        <label for="searchId">ID / Nom</label>
+                        <input id="searchId" type="text" placeholder="ex: 6 ou pikachu" />
+                        <button id="searchBtn" class="btn">Rechercher</button>
+                    </div>
+                    <label class="pagesize">
+                    Par page
+                    <select id="pageSize" aria-label="Nombre d'éléments par page">
+                        <option value="10">10</option>
+                        <option value="25" selected>25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="-1">Tout</option>
+                    </select>
+                    </label>
+                </div>
+                <div class="pager">
+                    <button id="prev" class="btn" aria-label="Page précédente">‹</button>
+                    <span id="pageInfo" aria-live="polite">Page 1/1</span>
+                    <button id="next" class="btn" aria-label="Page suivante">›</button>
+                </div>
+            </div>
+            <section class="grid" id="grid">
+                <noscript>Active JavaScript pour charger les cartes.</noscript>
+            </section>
+        </main>
+        <div id="pkm-modal" aria-hidden="true">
+            <div class="modal__backdrop" data-close></div>
+            <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="pkm-modal-title">
+            <button class="modal__close" type="button" aria-label="Fermer" data-close>×</button>
+            <header class="modal__header">
+                <h2 id="pkm-modal-title"></h2>
+                <div class="modal__types"></div>
+            </header>
+            <div class="modal__body"><!-- contenu injecté via JS --></div>
+            </div>
+        </div>
 
-    <!-- Toolbar pagination -->
-    <div class="toolbar" role="region" aria-label="Contrôles de pagination">
-      <div class="toolbar-left">
-        <label class="pagesize">
-          Par page
-          <select id="pageSize" aria-label="Nombre d'éléments par page">
-            <option value="10">10</option>
-            <option value="25" selected>25</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-            <option value="-1">Tout</option>
-          </select>
-        </label>
-      </div>
-      <div class="pager">
-        <button id="prev" class="btn" aria-label="Page précédente">‹</button>
-        <span id="pageInfo" aria-live="polite">Page 1/1</span>
-        <button id="next" class="btn" aria-label="Page suivante">›</button>
-      </div>
-    </div>
-
-    <!-- Grille — alimentée par script.js -->
-    <section class="grid" id="grid">
-      <noscript>Active JavaScript pour charger les cartes.</noscript>
-    </section>
-  </main>
-
-  <!-- Modal Détails Pokémon -->
-  <div id="pkm-modal" aria-hidden="true">
-    <div class="modal__backdrop" data-close></div>
-    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="pkm-modal-title">
-      <button class="modal__close" type="button" aria-label="Fermer" data-close>×</button>
-      <header class="modal__header">
-        <h2 id="pkm-modal-title"></h2>
-        <div class="modal__types"></div>
-      </header>
-      <div class="modal__body"><!-- contenu injecté via JS --></div>
-    </div>
-  </div>
-
-  <script type="module" src="src/script.js"></script>
-</body>
+        <script type="module" src="src/js/sidebar.js"></script>
+        <script type="module" src="src/js/script.js"></script>
+    </body>
 </html>
