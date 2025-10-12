@@ -22,33 +22,33 @@
 ├── index.html # page principale (grille + modal)
 ├── README.md # Read me du projet
 ├── LICENSE # License MIT
-├── src/
-│    ├── css/
-│    │    ├── tokens.css # variables / design tokens
-│    │    ├── base.css # reset & fond
-│    │    ├── toolbar.css # barre d’outils (top)
-│    │    ├── card.css # style des cartes
-│    │    ├── details.css # listes, stats, résistances, types
-│    │    ├── modal.css # modal + scrollbar custom
-│    │    ├── sidebar.css # sidebar fixe + carte GitHub
-│    │    └── responsive.css # ajustements mobiles
-│    ├── img/
-│    │    ├── pokeball.png # Icône du site
-│    ├── pages/
-│    │    ├── about.html
-│    │    ├── changelog.html
-│    ├── js/
-│    │    ├── cards.js # Affichage des cartes
-│    │    ├── details.js # Affichages des informations en plus de la carte
-│    │    ├── dom.js 
-│    │    ├── modal.js # Ouverture / Fermeture du modal des informations
-│    │    ├── pagination.js
-│    │    ├── script.js 
-│    │    ├── search.js # recherche temps réel (ID + nom)
-│    │    ├── sidebar.js # sidebar + dispatcher d’actions + GitHub
-│    │    ├── sprites.js
-│    │    ├── types.js
-│    │    └── utils.js # helpers (DOM, formatage, fetch, etc.)
+└── src/
+     ├── css/
+     │    ├── tokens.css # variables / design tokens
+     │    ├── base.css # reset & fond
+     │    ├── toolbar.css # barre d’outils (top)
+     │    ├── card.css # style des cartes
+     │    ├── details.css # listes, stats, résistances, types
+     │    ├── modal.css # modal + scrollbar custom
+     │    ├── sidebar.css # sidebar fixe + carte GitHub
+     │    └── responsive.css # ajustements mobiles
+     ├── img/
+     │    └── pokeball.png # Icône du site
+     ├── pages/
+     │    ├── about.html
+     │    └── changelog.html
+     └── js/
+          ├── cards.js # Affichage des cartes
+          ├── details.js # Affichages des informations en plus de la carte
+          ├── dom.js 
+          ├── modal.js # Ouverture / Fermeture du modal des informations
+          ├── pagination.js
+          ├── script.js 
+          ├── search.js # recherche temps réel (ID + nom)
+          ├── sidebar.js # sidebar + dispatcher d’actions + GitHub
+          ├── sprites.js
+          ├── types.js
+          └── utils.js # helpers (DOM, formatage, fetch, etc.)
 ```
 
 > Si certains modules ne sont pas encore séparés chez toi, tu peux conserver un seul `script.js` et migrer progressivement.
