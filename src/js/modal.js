@@ -9,12 +9,8 @@ export function openModal(p){
   const root  = select("#pkm-modal");
   const body  = root.querySelector(".modal__body");
   const title = root.querySelector("#pkm-modal-title");
-  const types = root.querySelector(".modal__types");
 
-  title.textContent = p.name?.fr || p.name?.en || "";
-  types.innerHTML = "";
-  types.append(renderTypes(p.types));
-
+  title.textContent = `#${p?.pokedex_id} - ${p.name?.fr || p.name?.en || ""} | Génération N°${p?.generation}`;
   body.innerHTML = "";
   let variants = collectVariants(p);
   if (!variants.length){ variants = [{ key:"regular", label: p?.sprites?.regular ? "Normal" : "Sprite", url: primarySprite(p) }]; }
