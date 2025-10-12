@@ -1,103 +1,109 @@
-<!--
-    Dear user using my README as a base
-    to create your own, I’m happy to authorize its use 
-    and I’m glad you liked it! I just kindly ask for one thing:
+# Pokémon API – Cartes 3D Hover (CSS pur)
 
-    Please, leave a star on my README it would truly make my day :)
-    GitHub: https://github.com/Glauedson
--->
+---
 
-<!-- Banner  -->
-<a href="https://github.com/ArmsYT">
-  <img src="https://raw.githubusercontent.com/ArmsYT/ArmsYT/refs/heads/main/assets/banner.jpg" alt="Imagem de capa"  style="width:100%; height:auto"/>
-</a>
+## ✨ Fonctionnalités
 
-</br>
-<div align="center">
-<a href="https://github.com/ArmsYT">
-  <img width="180px" src="https://komarev.com/ghpvc/?username=ArmsYT&label=Profile%20views&color=000000&style=for-the-badge"  alt="Total Profile Views" title="Total Profile Views"/> 
-</a>
-</div>
+- **Cartes 3D hover** (CSS pur), format élargi
+- **Modal détaillé** : sprites *Normal*, *Shiny*, formes, **Méga** et **GigaMax**
+- **Types / résistances / faiblesses** avec icônes + infobulles
+- **Stats de base**, talents & évolutions
+- **Recherche temps réel** (par **ID** et **nom**)
+- **Pagination** : 10 / 25 / 50 / 100 / **Tout**
+- **Sidebar fixe**
+- **Navigation** : About & Changelog
 
-</br>
+---
 
-<img src="https://thearms.fr/file/hitsugaya_run" width=330 align="left">
-<div align="center">
+## 🗂️ Arborescence
 
-**Who Am I?**
-</div>
+```bash
+.
+├── index.html # page principale (grille + modal)
+├── README.md # Read me du projet
+├── LICENSE # License MIT
+├── src/
+│    └── css/
+│    │    ├── tokens.css # variables / design tokens
+│    │    ├── base.css # reset & fond
+│    │    ├── toolbar.css # barre d’outils (top)
+│    │    ├── card.css # style des cartes
+│    │    ├── details.css # listes, stats, résistances, types
+│    │    ├── modal.css # modal + scrollbar custom
+│    │    ├── sidebar.css # sidebar fixe + carte GitHub
+│    │    └── responsive.css # ajustements mobiles
+│    ├── img/
+│    │    ├── pokeball.png # Icône du site
+│    ├── pages/
+│    │    ├── about.html
+│    │    ├── changelog.html
+│    ├── js/
+│    │    ├── cards.js # Affichage des cartes
+│    │    ├── details.js # Affichages des informations en plus de la carte
+│    │    ├── dom.js 
+│    │    ├── modal.js # Ouverture / Fermeture du modal des informations
+│    │    ├── pagination.js
+│    │    ├── script.js 
+│    │    ├── search.js # recherche temps réel (ID + nom)
+│    │    ├── sidebar.js # sidebar + dispatcher d’actions + GitHub
+│    │    ├── sprites.js
+│    │    ├── types.js
+│    │    └── utils.js # helpers (DOM, formatage, fetch, etc.)
+```
 
-<div align="justify">
-My name is Arms, and I’m a passionate developer.
+> Si certains modules ne sont pas encore séparés chez toi, tu peux conserver un seul `script.js` et migrer progressivement.
 
-My journey into development started very young, with Minecraft servers at the age of 12. That’s where I discovered my love for configuration, scripting, and server customization — a foundation that quickly pushed me to explore other platforms.
+---
 
-Soon after, I dove into the FiveM universe, where I discovered the joy of designing scripts, optimizing systems, and bringing fully customized roleplay servers to life. This experience taught me how to structure my code, handle both client-side and server-side logic, and always aim for performance first.
+## 🔌 Données & API
 
-Over time, I wanted to go further and discovered the power of web development — HTML, CSS, PHP, and MySQL — which allowed me to create my own interfaces, websites, and tools connected to my FiveM projects.
+- Source : [**TyraDex**](https://tyradex.vercel.app/) Endpoint principal utilisé : [`https://tyradex.vercel.app/api/v1/pokemon`](https://tyradex.vercel.app/)
+- Les sprites (normal/shiny/mega/gmax) sont fournis par TyraDex (GitHub raw CDNs).
+- Un fallback est prévu lorsque certaines URLs sont manquantes.
 
-I love turning an idea into clean and structured code while paying special attention to the user experience. Whether it’s a website or an in-game system, my goal remains the same: to create something smooth, functional, and unique.
+---
 
-Today, I continue to grow as a self-taught developer, exploring modern tools and frameworks while constantly pushing my technical and creative limits.
-</div>
-</br>
+## 🚀 Installation & lancement
 
-<!-- Gif  -->
-<img align="right" width="300" src="https://media.tenor.com/Gh3LKX9HMFkAAAAj/hollow-knight-knight.gif"></br>
+1. **Cloner**
+  ```bash
+  git clone https://github.com/ArmsYT/PokeAPI.git
+  cd PokeAPI
+  ```
 
-<!-- A Little More About Me -->
- <h3 align="center">A Little More About Me</h3>
-
- ⬛ Currently working on projects.</br>
- ㅤ
-
-</div>
-</br>
-
-
-<!-- github status-->
-<h3 align="center">Github Status</h3><br>
-
-
-<!-- Status -->
-<div align="center">
-[![GitHub Streak](https://streak-stats.demolab.com?user=ArmsYT&theme=graywhite&hide_border=true&locale=eng)](https://git.io/streak-stats)
-</div>
-
-
-<!-- My Tech Stack -->
-
-<h3 align="center">My Tech Stack</h3>
-
-<br/>
-
-<div align="center">
-    <img src="https://skillicons.dev/icons?i=html,css,php,js,mysql,github" /><br>
-    <img src="https://skillicons.dev/icons?i=nodejs,tailwind,bootstrap,postman,git,notion" /><br>
-    <img src="https://skillicons.dev/icons?i=photoshop,discord,discordjs,lua,vscode,windows" /><br>
-</div>
-
-<br/>
+---
 
 
+## 🧭 Utilisation
 
+- Recherche : tape un ID (ex. 6) ou un nom (ex. dracau) → la grille se filtre en temps réel.
+- Voir + sur une carte → ouvre le modal détaillé.
+- Sidebar : actions de pagination.
 
-<!-- My Best Repositories -->
-<div align="center">
-  <h3> My Best Repositories</h3></br>
-</div>
+---
 
+## ⚡ Performance
 
+- Lazy images (loading="lazy")
+- Rendu DOM par fragments
+- Fallback offline pour la carte GitHub (pas de “trou” visuel)
+- CSS modulaire, uniquement ce qu’il faut par page
 
-<div align="center">
-  <div style="display: flex; justify-content: center; gap: 10px;">
-    <a href="https://github.com/ArmsYT/string-generator">
-        <img width=395 src="https://github-readme-stats.vercel.app/api/pin/?username=ArmsYT&repo=string-generator&theme=dark&title_color=000000&icon_color=000000&text_color=000000&bg_color=ffffff" />
-    </a>
-    <a href="https://github.com/ArmsYT/qr-code-generator">
-        <img width=395 src="https://github-readme-stats.vercel.app/api/pin/?username=ArmsYT&repo=qr-code-generator&theme=dark&title_color=000000&icon_color=000000&text_color=000000&bg_color=ffffff" />
-    </a>
-</div>
-</br>
+---
 
-<p align="center"><img  src="https://capsule-render.vercel.app/api?type=waving&color=White&height=80&section=footer" width="100%"/></p>
+## 📜 Licence & 🛡️ Mentions
+
+Code sous [MIT LICENSE](https://github.com/ArmsYT/PokeAPI/blob/main/LICENSE).
+Disclaimer : Projet non officiel. Pokémon et les noms associés sont des marques déposées de leurs propriétaires respectifs. Les visuels et données sont fournis à titre informatif via l’API publique TyraDex.
+
+---
+
+## 🙌 Crédits
+
+- Données & sprites : [TyraDex](https://tyradex.vercel.app/)
+- Design & intégration : [ArmsYT](https://www.github.com/ArmsYT)
+
+---
+
+## 📧 Contact
+Pour toutes questions, suggestions ou contributions: 📩 [Arms](mailto:armsgfx@gmail.com).
