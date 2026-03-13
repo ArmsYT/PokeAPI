@@ -4,7 +4,7 @@ import { buildCard } from "./cards.js";
 import { searchState, getDataset, searchPokemon, wireSearch } from "./search.js";
 import { pageState, setPageSize, setCurrentPage, totalPages, sliceForCurrentPage, wirePagination } from "./pagination.js";
 
-const API_URL = "https://tyradex.vercel.app/api/v1/pokemon";
+const API_URL = "https://tyradex.app/api/v1/pokemon";
 let ALL = [];
 
 function renderPage(){
