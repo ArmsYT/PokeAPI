@@ -61,7 +61,7 @@ function typeIconUrl(typeName) {
 function typeBadge(type, size = "normal") {
   const color = typeColor(type.name);
   return `<span class="type-badge" style="background:${color}">
-    ${type.image ? `<img src="${type.image}" alt="" onerror="handleImgError(this)">` : ""}${type.name}
+    ${type.image ? `<img src="${type.image}" alt="" onerror="handleImgError(this)">` : ""}${typeDisplayName(type.name)}
   </span>`;
 }
 

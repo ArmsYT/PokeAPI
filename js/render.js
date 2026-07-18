@@ -19,16 +19,28 @@ const paginationEl = document.getElementById("pagination");
 const emptyStateEl = document.getElementById("emptyState");
 const resultsCountEl = document.getElementById("resultsCount");
 const sentinelEl = document.getElementById("sentinel");
+const statsPanelsEl = document.getElementById("statsPanels");
 const statsSummaryEl = document.getElementById("statsSummary");
+const statsTypesEl = document.getElementById("statsTypes");
+const statsGenerationsEl = document.getElementById("statsGenerations");
+const statsGendersEl = document.getElementById("statsGenders");
+const statsRecordsEl = document.getElementById("statsRecords");
 
-// Libellés/échelle pour les statistiques moyennes affichées sous la
-// pagination (noms distincts de ceux du modal pour éviter toute collision
-// de déclaration `const` entre scripts qui partagent le même scope global).
-const AVG_STAT_LABELS = { hp: "PV", atk: "Attaque", def: "Défense", spe_atk: "Atq. Spé.", spe_def: "Déf. Spé.", vit: "Vitesse" };
+// Le texte "Chargement de la suite..." du scroll infini est posé en CSS
+// (::after / attr()) pour rester visuellement figé pendant l'animation ;
+// on synchronise sa traduction via un attribut data-* mis à jour ici.
+function updateSentinelLoadingText() {
+  if (sentinelEl) sentinelEl.dataset.loadingText = t("loadingMore");
+}
+updateSentinelLoadingText();
+
+// Clés i18n (et ordre d'affichage) pour les statistiques moyennes affichées
+// sous la pagination.
+const AVG_STAT_KEYS = { hp: "statHp", atk: "statAtk", def: "statDef", spe_atk: "statSpeAtk", spe_def: "statSpeDef", vit: "statVit" };
 const AVG_STAT_MAX = 200;
 
 function computeAverageStats(list) {
-  const keys = Object.keys(AVG_STAT_LABELS);
+  const keys = Object.keys(AVG_STAT_KEYS);
   const sums = Object.fromEntries(keys.map(k => [k, 0]));
   let count = 0;
   list.forEach(p => {
@@ -45,34 +57,194 @@ function computeAverageStats(list) {
 function statsSummaryHTML(list) {
   const data = computeAverageStats(list);
   if (!data) return "";
-  const rows = Object.entries(AVG_STAT_LABELS).map(([key, label]) => {
+  const rows = Object.entries(AVG_STAT_KEYS).map(([key, i18nKey]) => {
     const val = data.avgs[key];
     const pct = Math.min(100, Math.round((val / AVG_STAT_MAX) * 100));
     return `
       <div class="avg-stat-row">
-        <span class="avg-stat-name">${label}</span>
+        <span class="avg-stat-name">${t(i18nKey)}</span>
         <span class="avg-stat-value">${val.toFixed(1)}</span>
         <div class="avg-stat-bar-track"><div class="avg-stat-bar-fill" style="width:${pct}%"></div></div>
       </div>`;
   }).join("");
   return `
-    <h3 class="stats-summary-title">Statistiques moyennes <span class="stats-summary-count">(${data.count} Pokémon)</span></h3>
+    <h3 class="stats-summary-title">${t("statsSummaryTitle")} <span class="stats-summary-count">${t("statsSummaryCount", { n: data.count })}</span></h3>
     <div class="avg-stats-grid">${rows}</div>`;
 }
 
-// Moyennes calculées sur l'ensemble des résultats filtrés (pas seulement
-// la page/le lot actuellement affiché), pour rester représentatif même en
+// ---- Répartition par type / génération + records (à côté des moyennes) ----
+
+function computeTypeBreakdown(list) {
+  const counts = new Map();
+  list.forEach(p => {
+    (p.types || []).forEach(t2 => {
+      counts.set(t2.name, (counts.get(t2.name) || 0) + 1);
+    });
+  });
+  return [...counts.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .map(([name, count]) => ({ name, count }));
+}
+
+function computeGenerationBreakdown(list) {
+  const counts = new Map();
+  list.forEach(p => {
+    if (p.generation == null) return;
+    counts.set(p.generation, (counts.get(p.generation) || 0) + 1);
+  });
+  return [...counts.entries()].sort((a, b) => a[0] - b[0]);
+}
+
+const RECORD_DEFS = [
+  { key: "atk", labelKey: "recordHighestAtk" },
+  { key: "def", labelKey: "recordHighestDef" },
+  { key: "hp", labelKey: "recordHighestHp" },
+  { key: "vit", labelKey: "recordHighestVit" },
+];
+
+function computeRecords(list) {
+  return RECORD_DEFS.map(def => {
+    let best = null;
+    list.forEach(p => {
+      const val = p.stats?.[def.key];
+      if (val == null) return;
+      if (!best || val > best.value) best = { pokemon: p, value: val };
+    });
+    return best ? { ...def, ...best } : null;
+  }).filter(Boolean);
+}
+
+// Barre façon "statistiques moyennes" : une ligne par entrée, largeur
+// proportionnelle à la valeur la plus haute du groupe (pas à une échelle
+// fixe comme les stats de combat, ici les échelles varient trop d'une
+// recherche à l'autre).
+function barRowHTML({ label, iconUrl, value, maxValue, barColor }) {
+  const pct = maxValue > 0 ? Math.round((value / maxValue) * 100) : 0;
+  return `
+    <div class="avg-stat-row">
+      <span class="avg-stat-name">${iconUrl ? `<img class="type-stat-icon" src="${iconUrl}" alt="" onerror="handleImgError(this)">` : ""}${escapeHtml(label)}</span>
+      <span class="avg-stat-value">${value}</span>
+      <div class="avg-stat-bar-track"><div class="avg-stat-bar-fill" style="width:${pct}%;${barColor ? `background:${barColor}` : ""}"></div></div>
+    </div>`;
+}
+
+function statsTypesHTML(list) {
+  const types = computeTypeBreakdown(list);
+  if (!types.length) return "";
+  const max = types[0].count;
+  const rows = types.map(entry => barRowHTML({
+    label: typeDisplayName(entry.name),
+    iconUrl: typeIconUrl(entry.name),
+    value: entry.count,
+    maxValue: max,
+    barColor: typeColor(entry.name),
+  })).join("");
+  return `<h3 class="stats-summary-title">${t("statsBreakdownTypesTitle")}</h3><div class="avg-stats-grid">${rows}</div>`;
+}
+
+function statsGenerationsHTML(list) {
+  const gens = computeGenerationBreakdown(list);
+  if (!gens.length) return "";
+  const max = Math.max(...gens.map(([, count]) => count));
+  const rows = gens.map(([gen, count]) => barRowHTML({
+    label: t("generationLabel", { n: gen }),
+    value: count,
+    maxValue: max,
+  })).join("");
+  return `<h3 class="stats-summary-title">${t("statsBreakdownGenTitle")}</h3><div class="avg-stats-grid">${rows}</div>`;
+}
+
+// Même logique de classification que sexeText() dans modal.js : un Pokémon
+// est mixte si male ET female sont > 0, uniquement mâle/femelle si un seul
+// des deux est > 0, sinon asexué (sexe null ou les deux à 0/absents).
+function categorizeSex(p) {
+  const male = p.sexe?.male ?? 0;
+  const female = p.sexe?.female ?? 0;
+  if (male > 0 && female > 0) return "mixed";
+  if (male > 0) return "maleOnly";
+  if (female > 0) return "femaleOnly";
+  return "genderless";
+}
+
+const SEX_CATEGORY_LABEL_KEYS = {
+  mixed: "sexCategoryMixed",
+  maleOnly: "sexCategoryMaleOnly",
+  femaleOnly: "sexCategoryFemaleOnly",
+  genderless: "modalSexless",
+};
+
+function computeSexBreakdown(list) {
+  const counts = new Map();
+  list.forEach(p => {
+    const cat = categorizeSex(p);
+    counts.set(cat, (counts.get(cat) || 0) + 1);
+  });
+  return [...counts.entries()].sort((a, b) => b[1] - a[1]);
+}
+
+function statsGendersHTML(list) {
+  const breakdown = computeSexBreakdown(list);
+  if (!breakdown.length) return "";
+  const max = breakdown[0][1];
+  const rows = breakdown.map(([cat, count]) => barRowHTML({
+    label: t(SEX_CATEGORY_LABEL_KEYS[cat]),
+    value: count,
+    maxValue: max,
+  })).join("");
+  return `<h3 class="stats-summary-title">${t("statsBreakdownSexTitle")}</h3><div class="avg-stats-grid">${rows}</div>`;
+}
+
+function recordCardHTML(record) {
+  const p = record.pokemon;
+  const img = p.sprites?.regular || TyradexAPI.spriteUrl(p.pokedex_id);
+  const name = localizedName(p.name);
+  return `
+    <div class="record-card" data-id="${p.pokedex_id}">
+      <img src="${img}" alt="" onerror="handleImgError(this)">
+      <div class="record-info">
+        <span class="record-label">${t(record.labelKey)}</span>
+        <span class="record-name">${escapeHtml(name)}</span>
+        <span class="record-value">${record.value}</span>
+      </div>
+    </div>`;
+}
+
+function statsRecordsHTML(list) {
+  const records = computeRecords(list);
+  if (!records.length) return "";
+  return `<h3 class="stats-summary-title">${t("statsBreakdownRecordsTitle")}</h3><div class="records-grid">${records.map(recordCardHTML).join("")}</div>`;
+}
+
+function wireStatsRecords() {
+  if (!statsRecordsEl) return;
+  statsRecordsEl.querySelectorAll(".record-card[data-id]").forEach(card => {
+    card.addEventListener("click", () => openPokemonModal(Number(card.dataset.id)));
+  });
+}
+
+// Une carte par statistique (moyennes / types / générations / records),
+// calculées sur l'ensemble des résultats filtrés (pas seulement la
+// page/le lot actuellement affiché), pour rester représentatif même en
 // pagination ou en scroll infini partiellement chargé.
 function renderStatsSummary() {
   const list = AppState.filtered;
-  if (!statsSummaryEl) return;
+  if (!statsPanelsEl) return;
   if (list.length === 0) {
-    statsSummaryEl.hidden = true;
+    statsPanelsEl.hidden = true;
     statsSummaryEl.innerHTML = "";
+    statsTypesEl.innerHTML = "";
+    statsGenerationsEl.innerHTML = "";
+    statsGendersEl.innerHTML = "";
+    statsRecordsEl.innerHTML = "";
     return;
   }
-  statsSummaryEl.hidden = false;
+  statsPanelsEl.hidden = false;
   statsSummaryEl.innerHTML = statsSummaryHTML(list);
+  statsTypesEl.innerHTML = statsTypesHTML(list);
+  statsGenerationsEl.innerHTML = statsGenerationsHTML(list);
+  statsGendersEl.innerHTML = statsGendersHTML(list);
+  statsRecordsEl.innerHTML = statsRecordsHTML(list);
+  wireStatsRecords();
 }
 
 function renderSkeletons(count = 12) {
@@ -115,7 +287,7 @@ function applyFiltersAndSort() {
   list = [...list].sort(sorters[AppState.order] || sorters["id-asc"]);
 
   AppState.filtered = list;
-  resultsCountEl.textContent = `${list.length} Pokémon`;
+  resultsCountEl.textContent = t("resultsCount", { n: list.length });
 }
 
 function pokeCardHTML(p) {

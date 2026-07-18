@@ -404,7 +404,7 @@ button { font-family: inherit; cursor: pointer; }
   border-top-color: var(--accent);
   animation: spin 0.7s linear infinite;
 }
-.sentinel.loading::after { content: "Chargement de la suite..."; }
+.sentinel.loading::after { content: attr(data-loading-text); }
 @keyframes spin { to { transform: rotate(360deg); } }
 .empty-state { text-align: center; color: var(--text-dim); padding: 60px 0; font-size: 1rem; }
 
@@ -422,9 +422,18 @@ button { font-family: inherit; cursor: pointer; }
 .pagination .dots { color: var(--text-dim); padding: 0 4px; }
 
 /* ============ STATS SUMMARY (moyennes des résultats filtrés) ============ */
-.stats-summary {
-  max-width: 480px;
+.stats-panels {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
   margin: 8px auto 32px;
+  padding: 0 24px;
+}
+.stats-card {
+  width: 100%;
+  max-width: 340px;
   padding: 18px 22px;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
@@ -437,12 +446,32 @@ button { font-family: inherit; cursor: pointer; }
   color: var(--text);
 }
 .stats-summary-count { font-weight: 400; color: var(--text-dim); font-size: 0.82rem; }
-.avg-stats-grid { display: flex; flex-direction: column; gap: 8px; }
-.avg-stat-row { display: grid; grid-template-columns: 90px 40px 1fr; align-items: center; gap: 10px; }
-.avg-stat-name { font-size: 0.82rem; color: var(--text-dim); }
+.avg-stats-grid { display: flex; flex-direction: column; gap: 8px; max-height: 260px; overflow-y: auto; }
+.avg-stat-row { display: grid; grid-template-columns: 90px 34px 1fr; align-items: center; gap: 10px; }
+.avg-stat-name {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 0.82rem; color: var(--text-dim);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
 .avg-stat-value { font-size: 0.85rem; font-weight: 700; text-align: right; }
 .avg-stat-bar-track { height: 8px; border-radius: 999px; background: var(--bg-elevated-2); overflow: hidden; }
 .avg-stat-bar-fill { height: 100%; border-radius: 999px; background: var(--accent); }
+.type-stat-icon { width: 14px; height: 14px; flex-shrink: 0; }
+
+.records-grid { display: flex; flex-direction: column; gap: 8px; }
+.record-card {
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+.record-card:hover { background: var(--bg-elevated-2); }
+.record-card img { width: 34px; height: 34px; object-fit: contain; flex-shrink: 0; }
+.record-info { display: flex; flex-direction: column; min-width: 0; }
+.record-label { font-size: 0.72rem; color: var(--text-dim); }
+.record-name { font-size: 0.85rem; font-weight: 700; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.record-value { font-size: 0.78rem; color: var(--accent); font-weight: 700; }
 
 /* ============ OVERLAYS (about / changelog / modal) ============ */
 .page-overlay, .modal-overlay {
@@ -531,6 +560,7 @@ button { font-family: inherit; cursor: pointer; }
 .modal-info-head { flex: 1; min-width: 240px; }
 .modal-info-head .poke-num { color: var(--text-dim); font-weight: 700; font-size: 0.95rem; }
 .modal-info-head h2 { margin: 2px 0 4px; font-size: 1.7rem; }
+.poke-name-variant { color: var(--text-dim); font-weight: 400; font-size: 1.05rem; }
 .modal-info-head .poke-alt-names { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 8px; }
 .modal-info-head .poke-category { color: var(--text-dim); font-size: 0.85rem; font-style: italic; margin-bottom: 10px; }
 .modal-info-head .poke-types { display: flex; gap: 6px; margin-bottom: 14px; }

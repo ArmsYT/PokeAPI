@@ -6,15 +6,36 @@ const orderSelect = document.getElementById("orderSelect");
 const typeSelect = document.getElementById("typeSelect");
 const genSelect = document.getElementById("genSelect");
 
+// La `value` de chaque option reste le nom français (c'est ce que l'API
+// renvoie dans p.types, donc ce qui sert de base au filtrage) ; seul le
+// texte affiché est traduit via la table TYPE_NAME_TRANSLATIONS.
 function populateTypeSelect() {
-  const options = ALL_TYPES.map(t => `<option value="${t}" data-icon="${typeIconUrl(t)}">${t}</option>`).join("");
+  const options = ALL_TYPES.map(typeName => `<option value="${typeName}" data-icon="${typeIconUrl(typeName)}">${typeDisplayName(typeName)}</option>`).join("");
   typeSelect.insertAdjacentHTML("beforeend", options);
 }
 
+// Retraduit le texte des options de type déjà en place (leur `value`/nombre
+// ne change jamais, contrairement aux générations) — appelée à chaque
+// changement de langue.
+function retranslateTypeOptions() {
+  [...typeSelect.options].forEach(opt => {
+    if (opt.value) opt.textContent = typeDisplayName(opt.value);
+  });
+}
+
+// Reconstruit les options dynamiques "Génération N" (en gardant "Toutes",
+// toujours la première option du select) — appelée au chargement initial et
+// de nouveau à chaque changement de langue pour retraduire leur libellé.
 function populateGenSelect() {
+  // On préserve la sélection courante : reconstruire les options fait perdre
+  // la sélection native si on ne la restaure pas explicitement après coup.
+  const currentValue = genSelect.value;
+  [...genSelect.options].slice(1).forEach(o => o.remove());
   const gens = [...new Set(AppState.all.map(p => p.generation).filter(g => g != null))].sort((a, b) => a - b);
-  const options = gens.map(g => `<option value="${g}">Génération ${g}</option>`).join("");
+  const options = gens.map(g => `<option value="${g}">${t("generationLabel", { n: g })}</option>`).join("");
   genSelect.insertAdjacentHTML("beforeend", options);
+  const restored = [...genSelect.options].find(o => o.value === currentValue);
+  if (restored) restored.selected = true;
 }
 
 function wireControls() {
@@ -76,6 +97,8 @@ function syncStateFromSelects() {
 }
 
 async function init() {
+  applyStaticTranslations();
+  updateSentinelLoadingText();
   wireControls();
   renderSkeletons(24);
   syncStateFromSelects();
@@ -101,7 +124,8 @@ async function init() {
   } catch (err) {
     gridEl.innerHTML = "";
     emptyStateEl.hidden = false;
-    emptyStateEl.textContent = "Impossible de charger les données de l'API Tyradex. Réessaie plus tard.";
+    emptyStateEl.removeAttribute("data-i18n-key");
+    emptyStateEl.textContent = t("fetchError");
     console.error(err);
   }
 }

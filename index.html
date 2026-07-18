@@ -21,15 +21,15 @@
     <nav class="sidebar-nav">
       <a class="nav-item" id="navApi" href="https://tyradex.app/docs" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" class="nav-icon"><path d="M13.5 2L4 14h6l-1 8 9.5-12h-6l1-8z"/></svg>
-        <span>Lien vers l'API</span>
+        <span data-i18n-key="navApiLink">Lien vers l'API</span>
       </a>
       <button class="nav-item" id="navAbout" type="button">
         <svg viewBox="0 0 24 24" class="nav-icon"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="12" y1="10.5" x2="12" y2="17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="7.3" r="1.1"/></svg>
-        <span>À propos</span>
+        <span data-i18n-key="navAbout">À propos</span>
       </button>
       <button class="nav-item" id="navChangelog" type="button">
         <svg viewBox="0 0 24 24" class="nav-icon"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M5 3h11l3 3v15H5z"/><line x1="8" y1="9" x2="16" y2="9" stroke="currentColor" stroke-width="1.4"/><line x1="8" y1="13" x2="16" y2="13" stroke="currentColor" stroke-width="1.4"/><line x1="8" y1="17" x2="13" y2="17" stroke="currentColor" stroke-width="1.4"/></svg>
-        <span>Changelog</span>
+        <span data-i18n-key="navChangelog">Changelog</span>
       </button>
     </nav>
   </div>
@@ -39,12 +39,12 @@
       <img id="githubAvatar" src="https://github.com/ArmsYT.png" alt="Avatar GitHub" class="github-avatar" onerror="handleImgError(this)">
       <div class="github-info">
         <span class="github-name">ArmsYT</span>
-        <span class="github-sub">Voir le profil GitHub</span>
+        <span class="github-sub" data-i18n-key="githubSub">Voir le profil GitHub</span>
       </div>
     </a>
     <a class="license-badge" href="https://github.com/ArmsYT/PokeAPI/blob/main/LICENSE" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" class="nav-icon"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M12 3v18M7 6l-4 8a4 4 0 008 0l-4-8zM17 6l-4 8a4 4 0 008 0l-4-8z"/></svg>
-      <span>Licence MIT</span>
+      <span data-i18n-key="license">Licence MIT</span>
     </a>
   </div>
 </aside>
@@ -53,18 +53,18 @@
 <div class="app-main">
 
   <header class="topbar">
-    <button class="burger" id="burgerBtn" aria-label="Menu">
+    <button class="burger" id="burgerBtn" aria-label="Menu" data-i18n-aria-label="burgerMenu">
       <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
     </button>
 
     <div class="search-wrap">
       <svg viewBox="0 0 24 24" class="search-icon"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-      <input type="search" id="searchInput" placeholder="Rechercher un Pokémon..." autocomplete="off">
+      <input type="search" id="searchInput" placeholder="Rechercher un Pokémon..." data-i18n-placeholder="searchPlaceholder" autocomplete="off">
       <kbd class="search-kbd">Ctrl K</kbd>
     </div>
 
     <div class="lang-switcher" id="langSwitcher">
-      <button class="lang-trigger" id="langTrigger" type="button" title="Langue des noms de Pokémon" aria-haspopup="listbox" aria-expanded="false">
+      <button class="lang-trigger" id="langTrigger" type="button" title="Langue de l'interface" data-i18n-title="langSwitcherTitle" aria-haspopup="listbox" aria-expanded="false">
         <span id="langTriggerLabel">FR</span>
       </button>
       <ul class="lang-menu" id="langMenu" role="listbox" hidden>
@@ -74,7 +74,7 @@
       </ul>
     </div>
 
-    <button class="theme-toggle" id="themeToggle" title="Changer de thème">
+    <button class="theme-toggle" id="themeToggle" title="Changer de thème" data-i18n-title="themeToggleTitle">
       <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="1.8"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="1.5" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22.5"/><line x1="1.5" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22.5" y2="12"/><line x1="4.4" y1="4.4" x2="6.1" y2="6.1"/><line x1="17.9" y1="17.9" x2="19.6" y2="19.6"/><line x1="4.4" y1="19.6" x2="6.1" y2="17.9"/><line x1="17.9" y1="6.1" x2="19.6" y2="4.4"/></g></svg>
       <svg class="icon-moon" viewBox="0 0 24 24"><path fill="currentColor" d="M20.5 14.5A8.5 8.5 0 019.5 3.5 9 9 0 1020.5 14.5z"/></svg>
     </button>
@@ -82,38 +82,38 @@
 
   <div class="filters-bar">
     <div class="filter-group">
-      <label for="perPageSelect">Par page</label>
+      <label for="perPageSelect" data-i18n-key="filterPerPage">Par page</label>
       <select id="perPageSelect">
         <option value="15">15</option>
         <option value="30">30</option>
         <option value="60" selected>60</option>
-        <option value="all">Tout</option>
+        <option value="all" data-i18n-key="perPageAll">Tout</option>
       </select>
     </div>
 
     <div class="filter-group">
-      <label for="orderSelect">Ordre</label>
+      <label for="orderSelect" data-i18n-key="filterOrder">Ordre</label>
       <select id="orderSelect">
-        <option value="id-asc">ID croissant</option>
-        <option value="name-asc">Nom A → Z</option>
-        <option value="atk-desc">Attaque</option>
-        <option value="def-desc">Défense</option>
-        <option value="vit-desc">Vitesse</option>
-        <option value="hp-desc">PV</option>
+        <option value="id-asc" data-i18n-key="orderIdAsc">ID croissant</option>
+        <option value="name-asc" data-i18n-key="orderNameAsc">Nom A → Z</option>
+        <option value="atk-desc" data-i18n-key="orderAtk">Attaque</option>
+        <option value="def-desc" data-i18n-key="orderDef">Défense</option>
+        <option value="vit-desc" data-i18n-key="orderVit">Vitesse</option>
+        <option value="hp-desc" data-i18n-key="orderHp">PV</option>
       </select>
     </div>
 
     <div class="filter-group">
-      <label for="typeSelect">Type</label>
+      <label for="typeSelect" data-i18n-key="filterType">Type</label>
       <select id="typeSelect">
-        <option value="">Tous les types</option>
+        <option value="" data-i18n-key="allTypes">Tous les types</option>
       </select>
     </div>
 
     <div class="filter-group">
-      <label for="genSelect">Génération</label>
+      <label for="genSelect" data-i18n-key="filterGeneration">Génération</label>
       <select id="genSelect">
-        <option value="">Toutes</option>
+        <option value="" data-i18n-key="allGenerations">Toutes</option>
       </select>
     </div>
 
@@ -124,24 +124,30 @@
     <div class="pokemon-grid" id="pokemonGrid"></div>
     <div class="sentinel" id="sentinel"></div>
     <div class="pagination" id="pagination"></div>
-    <div class="stats-summary" id="statsSummary" hidden></div>
-    <div class="empty-state" id="emptyState" hidden>Aucun Pokémon ne correspond à ta recherche.</div>
+    <div class="stats-panels" id="statsPanels" hidden>
+      <div class="stats-card" id="statsSummary"></div>
+      <div class="stats-card" id="statsTypes"></div>
+      <div class="stats-card" id="statsGenerations"></div>
+      <div class="stats-card" id="statsGenders"></div>
+      <div class="stats-card" id="statsRecords"></div>
+    </div>
+    <div class="empty-state" id="emptyState" hidden data-i18n-key="emptyState">Aucun Pokémon ne correspond à ta recherche.</div>
   </main>
 
   <!-- ===== ABOUT VIEW ===== -->
   <div class="page-overlay" id="aboutView" hidden>
     <div class="page-panel">
       <button class="close-btn" id="closeAbout">&times;</button>
-      <h1>À propos</h1>
+      <h1 data-i18n-key="aboutTitle">À propos</h1>
       <div class="about-content">
-        <p>Ce PokéDex est un projet personnel qui exploite l'API publique et gratuite <a href="https://tyradex.app" target="_blank" rel="noopener">Tyradex</a>, une API Pokémon entièrement en français créée par <a href="https://github.com/Yarkis01" target="_blank" rel="noopener">Yarkis01</a> et <a href="https://github.com/Ashzuu" target="_blank" rel="noopener">Ashzuu</a>.</p>
-        <p>Le site permet de parcourir l'intégralité du Pokédex national : recherche par nom, filtres par type, tri par statistiques, pagination configurable, et une fiche détaillée pour chaque Pokémon (statistiques, talents, faiblesses/résistances, évolutions, formes chromatiques...).</p>
-        <h2>Technologies</h2>
-        <p>HTML, CSS et JavaScript natifs (aucun framework), pensé pour être hébergé gratuitement sur GitHub Pages.</p>
-        <h2>Crédits</h2>
-        <p>Données Pokémon fournies par <a href="https://tyradex.app" target="_blank" rel="noopener">Tyradex</a> (sources : Poképédia &amp; Serebii). Pokémon et tous les noms respectifs sont des marques déposées de The Pokémon Company International, Game Freak et Nintendo.</p>
-        <h2>Auteur</h2>
-        <p>Développé par <a href="https://github.com/ArmsYT" target="_blank" rel="noopener">ArmsYT</a>, sous licence MIT.</p>
+        <p data-i18n-html="aboutP1">Ce PokéDex est un projet personnel qui exploite l'API publique et gratuite <a href="https://tyradex.app" target="_blank" rel="noopener">Tyradex</a>, une API Pokémon entièrement en français créée par <a href="https://github.com/Yarkis01" target="_blank" rel="noopener">Yarkis01</a> et <a href="https://github.com/Ashzuu" target="_blank" rel="noopener">Ashzuu</a>.</p>
+        <p data-i18n-key="aboutP2">Le site permet de parcourir l'intégralité du Pokédex national : recherche par nom, filtres par type, tri par statistiques, pagination configurable, et une fiche détaillée pour chaque Pokémon (statistiques, talents, faiblesses/résistances, évolutions, formes chromatiques...).</p>
+        <h2 data-i18n-key="aboutTechTitle">Technologies</h2>
+        <p data-i18n-key="aboutTechText">HTML, CSS et JavaScript natifs (aucun framework), pensé pour être hébergé gratuitement sur GitHub Pages.</p>
+        <h2 data-i18n-key="aboutCreditsTitle">Crédits</h2>
+        <p data-i18n-html="aboutCreditsText">Données Pokémon fournies par <a href="https://tyradex.app" target="_blank" rel="noopener">Tyradex</a> (sources : Poképédia &amp; Serebii). Pokémon et tous les noms respectifs sont des marques déposées de The Pokémon Company International, Game Freak et Nintendo.</p>
+        <h2 data-i18n-key="aboutAuthorTitle">Auteur</h2>
+        <p data-i18n-html="aboutAuthorText">Développé par <a href="https://github.com/ArmsYT" target="_blank" rel="noopener">ArmsYT</a>, sous licence MIT.</p>
       </div>
     </div>
   </div>
@@ -150,9 +156,9 @@
   <div class="page-overlay" id="changelogView" hidden>
     <div class="page-panel">
       <button class="close-btn" id="closeChangelog">&times;</button>
-      <h1>Changelog</h1>
+      <h1 data-i18n-key="changelogTitle">Changelog</h1>
       <div class="changelog-content" id="changelogContent">
-        <p class="loading-text">Chargement...</p>
+        <p class="loading-text" data-i18n-key="changelogLoading">Chargement...</p>
       </div>
     </div>
   </div>
@@ -172,7 +178,10 @@
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/api.js"></script>
+<script src="js/species.js"></script>
 <script src="js/utils.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/abilities.js"></script>
 <script src="js/render.js"></script>
 <script src="js/modal.js"></script>
 <script src="js/sidebar.js"></script>

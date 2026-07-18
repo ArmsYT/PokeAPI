@@ -67,20 +67,20 @@ document.addEventListener("keydown", (e) => {
 // ---- Changelog : chargement des fichiers markdown datés ----
 let changelogLoaded = false;
 
-// Les fichiers de changelog sont nommés "AAAA-MM-JJ_HH-mm-ss.md" : les secondes
+// Les fichiers de changelog sont nommés "AAAA-MM-JJ-HH-mm-ss.md" : les secondes
 // servent uniquement à garantir un nom de fichier unique par modification
 // (éviter les doublons/écrasements), elles ne sont pas affichées.
-// Format affiché : "JJ:MM:AAAA HH:MM".
+// Format affiché : "HH:MM JJ/MM/AAAA".
 function formatChangelogDate(stamp) {
-  const match = stamp.match(/^(\d{4})-(\d{2})-(\d{2})(?:_(\d{2})-(\d{2})-(\d{2}))?$/);
+  const match = stamp.match(/^(\d{4})-(\d{2})-(\d{2})(?:-(\d{2})-(\d{2})-(\d{2}))?$/);
   if (!match) return stamp;
   const [, year, month, day, h = "00", m = "00"] = match;
-  return `${day}:${month}:${year} ${h}:${m}`;
+  return `${h}:${m} ${day}/${month}/${year}`;
 }
 
 async function loadChangelog() {
   if (changelogLoaded) return;
-  changelogContent.innerHTML = `<p class="loading-text">Chargement...</p>`;
+  changelogContent.innerHTML = `<p class="loading-text">${t("changelogLoading")}</p>`;
 
   try {
     const res = await fetch("changelogs/index.json");
@@ -100,10 +100,10 @@ async function loadChangelog() {
       <div class="changelog-entry">
         <span class="changelog-date">${escapeHtml(formatChangelogDate(e.dateStr))}</span>
         ${e.html}
-      </div>`).join("") || `<p class="no-data">Aucune entrée de changelog pour le moment.</p>`;
+      </div>`).join("") || `<p class="no-data">${t("changelogEmpty")}</p>`;
 
     changelogLoaded = true;
   } catch (err) {
-    changelogContent.innerHTML = `<p class="no-data">Impossible de charger le changelog (${escapeHtml(err.message)}).</p>`;
+    changelogContent.innerHTML = `<p class="no-data">${t("changelogError", { error: escapeHtml(err.message) })}</p>`;
   }
 }

@@ -6,6 +6,17 @@
 // donc tout le code existant qui écoute `select.addEventListener("change", ...)`
 // continue de fonctionner sans modification.
 
+// Registre des selects déjà transformés : permet de forcer une resynchro
+// explicite du libellé affiché (ex: après un changement de langue qui modifie
+// le texte des <option> sans changer leur `value`), plutôt que de dépendre
+// uniquement du MutationObserver (asynchrone, et pas toujours fiable selon
+// l'environnement d'exécution).
+const ENHANCED_SELECTS = [];
+
+function refreshAllCustomSelects() {
+  ENHANCED_SELECTS.forEach(fn => fn());
+}
+
 function enhanceSelect(selectEl) {
   if (!selectEl || selectEl.dataset.enhanced === "1") return;
   selectEl.dataset.enhanced = "1";
@@ -149,6 +160,7 @@ function enhanceSelect(selectEl) {
   observer.observe(selectEl, { childList: true, subtree: true });
 
   updateLabel();
+  ENHANCED_SELECTS.push(updateLabel);
 }
 
 function enhanceAllSelects(selector = "select") {

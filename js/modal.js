@@ -44,6 +44,15 @@ function galleryHTML(p) {
     </div>`;
 }
 
+// Met à jour le suffixe entre parenthèses à côté du nom du Pokémon pour
+// refléter la version actuellement affichée dans la galerie (Shiny, Gigamax,
+// Méga X/Y, etc.). Rien n'est affiché pour la version de base ("Normal").
+function setModalNameVariant(label) {
+  const variantEl = document.getElementById("modalNameVariant");
+  if (!variantEl) return;
+  variantEl.textContent = label && label !== "Normal" ? ` (${label})` : "";
+}
+
 function wireGallery() {
   const thumbsWrap = document.getElementById("galleryThumbs");
   if (!thumbsWrap) return;
@@ -55,12 +64,13 @@ function wireGallery() {
       btn.classList.add("active");
       const it = items[Number(btn.dataset.idx)];
       mainWrap.innerHTML = `${it.shiny ? '<span class="shiny-star">✨</span>' : ""}<img src="${it.img}" alt="${escapeHtml(it.label)}" onerror="handleImgError(this)">`;
+      setModalNameVariant(it.label);
     });
   });
 }
 
 function sexeText(p) {
-  if (!p.sexe || (p.sexe.male == null && p.sexe.female == null)) return "Asexué";
+  if (!p.sexe || (p.sexe.male == null && p.sexe.female == null)) return t("modalSexless");
   const male = p.sexe.male ?? 0;
   const female = p.sexe.female ?? 0;
   return `♂ ${male}% · ♀ ${female}%`;
@@ -78,32 +88,32 @@ function infoHeadHTML(p) {
   return `
     <div class="modal-info-head">
       <div class="poke-num">${padId(p.pokedex_id)}</div>
-      <h2>${escapeHtml(mainName)}</h2>
+      <h2 id="modalPokeName">${escapeHtml(mainName)}<span id="modalNameVariant" class="poke-name-variant"></span></h2>
       ${altNames ? `<div class="poke-alt-names">${escapeHtml(altNames)}</div>` : ""}
-      ${p.category ? `<div class="poke-category">${escapeHtml(p.category)}</div>` : ""}
+      ${p.category ? `<div class="poke-category" id="pokeCategory">${escapeHtml(p.category)}</div>` : ""}
       <div class="poke-types">${types}</div>
       <div class="info-mini-grid">
-        <div class="info-mini"><div class="mini-label">Génération</div><div class="mini-value">${p.generation ?? "—"}</div></div>
-        <div class="info-mini"><div class="mini-label">Taille</div><div class="mini-value">${p.height ?? "—"}</div></div>
-        <div class="info-mini"><div class="mini-label">Poids</div><div class="mini-value">${p.weight ?? "—"}</div></div>
-        <div class="info-mini"><div class="mini-label">Taux de capture</div><div class="mini-value">${p.catch_rate ?? "—"}</div></div>
-        <div class="info-mini"><div class="mini-label">XP niv. 100</div><div class="mini-value">${p.level_100 ? p.level_100.toLocaleString("fr-FR") : "—"}</div></div>
-        <div class="info-mini"><div class="mini-label">Sexe</div><div class="mini-value">${sexeText(p)}</div></div>
+        <div class="info-mini"><div class="mini-label">${t("modalMiniGeneration")}</div><div class="mini-value">${p.generation ?? "—"}</div></div>
+        <div class="info-mini"><div class="mini-label">${t("modalMiniHeight")}</div><div class="mini-value">${p.height ?? "—"}</div></div>
+        <div class="info-mini"><div class="mini-label">${t("modalMiniWeight")}</div><div class="mini-value">${p.weight ?? "—"}</div></div>
+        <div class="info-mini"><div class="mini-label">${t("modalMiniCatchRate")}</div><div class="mini-value">${p.catch_rate ?? "—"}</div></div>
+        <div class="info-mini"><div class="mini-label">${t("modalMiniXp100")}</div><div class="mini-value">${p.level_100 ? p.level_100.toLocaleString(LANG_LOCALE[CURRENT_LANG] || "fr-FR") : "—"}</div></div>
+        <div class="info-mini"><div class="mini-label">${t("modalMiniSex")}</div><div class="mini-value">${sexeText(p)}</div></div>
       </div>
     </div>`;
 }
 
-const STAT_LABELS = { hp: "PV", atk: "Attaque", def: "Défense", spe_atk: "Atq. Spé.", spe_def: "Déf. Spé.", vit: "Vitesse" };
+const STAT_I18N_KEYS = { hp: "statHp", atk: "statAtk", def: "statDef", spe_atk: "statSpeAtk", spe_def: "statSpeDef", vit: "statVit" };
 const STAT_MAX = 200;
 
 function statsHTML(p) {
-  if (!p.stats) return `<p class="no-data">Statistiques non disponibles.</p>`;
-  return Object.entries(STAT_LABELS).map(([key, label]) => {
+  if (!p.stats) return `<p class="no-data">${t("modalNoStats")}</p>`;
+  return Object.entries(STAT_I18N_KEYS).map(([key, i18nKey]) => {
     const val = p.stats[key] ?? 0;
     const pct = Math.min(100, Math.round((val / STAT_MAX) * 100));
     return `
       <div class="stat-row">
-        <span class="stat-name">${label}</span>
+        <span class="stat-name">${t(i18nKey)}</span>
         <span class="stat-value">${val}</span>
         <div class="stat-bar-track"><div class="stat-bar-fill" style="width:${pct}%"></div></div>
       </div>`;
@@ -111,21 +121,21 @@ function statsHTML(p) {
 }
 
 function talentsHTML(p) {
-  if (!Array.isArray(p.talents) || p.talents.length === 0) return `<p class="no-data">Aucun talent renseigné.</p>`;
-  return `<div class="talent-list">${p.talents.map(t => `
-    <span class="talent-chip ${t.tc ? "hidden-talent" : ""}">${escapeHtml(t.name)}${t.tc ? '<span class="tc-tag">Talent caché</span>' : ""}</span>
+  if (!Array.isArray(p.talents) || p.talents.length === 0) return `<p class="no-data">${t("modalNoTalents")}</p>`;
+  return `<div class="talent-list">${p.talents.map(tal => `
+    <span class="talent-chip ${tal.tc ? "hidden-talent" : ""}">${escapeHtml(talentDisplayName(tal.name))}${tal.tc ? `<span class="tc-tag">${t("modalTalentHidden")}</span>` : ""}</span>
   `).join("")}</div>`;
 }
 
 function matchupsHTML(p) {
-  if (!Array.isArray(p.resistances) || p.resistances.length === 0) return `<p class="no-data">Données de faiblesses non disponibles.</p>`;
+  if (!Array.isArray(p.resistances) || p.resistances.length === 0) return `<p class="no-data">${t("modalNoMatchups")}</p>`;
 
   const groups = [
-    { title: "Immunisé (×0)", test: m => m === 0, color: "#3a3f4b" },
-    { title: "Très résistant (×0.25)", test: m => m === 0.25, color: "#2e7d4f" },
-    { title: "Résistant (×0.5)", test: m => m === 0.5, color: "#4caf7d" },
-    { title: "Vulnérable (×2)", test: m => m === 2, color: "#d9534f" },
-    { title: "Très vulnérable (×4)", test: m => m === 4, color: "#a12622" },
+    { title: t("matchupImmune"), test: m => m === 0, color: "#3a3f4b" },
+    { title: t("matchupVeryResistant"), test: m => m === 0.25, color: "#2e7d4f" },
+    { title: t("matchupResistant"), test: m => m === 0.5, color: "#4caf7d" },
+    { title: t("matchupVulnerable"), test: m => m === 2, color: "#d9534f" },
+    { title: t("matchupVeryVulnerable"), test: m => m === 4, color: "#a12622" },
   ];
 
   const blocks = groups.map(g => {
@@ -133,12 +143,12 @@ function matchupsHTML(p) {
     if (entries.length === 0) return "";
     const chips = entries.map(r => `
       <span class="matchup-chip" style="background:${g.color}">
-        ${r.image ? `<img src="${r.image}" alt="" onerror="handleImgError(this)">` : ""}${r.name}
+        ${r.image ? `<img src="${r.image}" alt="" onerror="handleImgError(this)">` : ""}${typeDisplayName(r.name)}
       </span>`).join("");
     return `<div><div class="matchup-group-title">${g.title}</div><div class="matchup-row">${chips}</div></div>`;
   }).filter(Boolean).join("");
 
-  return `<div class="matchup-groups">${blocks || '<p class="no-data">Aucune particularité.</p>'}</div>`;
+  return `<div class="matchup-groups">${blocks || `<p class="no-data">${t("modalNoMatchupsNeutral")}</p>`}</div>`;
 }
 
 function evoNodeHTML(pokedexId, name, isCurrent = false) {
@@ -161,7 +171,7 @@ function evolutionsHTML(p) {
   const next = Array.isArray(p.evolution?.next) ? p.evolution.next : [];
 
   if (pre.length === 0 && next.length === 0) {
-    return `<p class="no-data">Ce Pokémon n'évolue pas.</p>`;
+    return `<p class="no-data">${t("modalNoEvolution")}</p>`;
   }
 
   // Les entrées pre/next de l'API ne donnent qu'un nom en français ; si le
@@ -204,37 +214,57 @@ function renderModalBody(p) {
     </div>
 
     <div class="modal-section">
-      <h3>Statistiques de base</h3>
+      <h3>${t("modalSectionStats")}</h3>
       ${statsHTML(p)}
     </div>
 
     <div class="modal-section">
-      <h3>Talents</h3>
+      <h3>${t("modalSectionTalents")}</h3>
       ${talentsHTML(p)}
     </div>
 
     <div class="modal-section">
-      <h3>Faiblesses &amp; résistances</h3>
+      <h3>${t("modalSectionMatchups")}</h3>
       ${matchupsHTML(p)}
     </div>
 
     <div class="modal-section">
-      <h3>Évolutions</h3>
+      <h3>${t("modalSectionEvolutions")}</h3>
       ${evolutionsHTML(p)}
     </div>
   `;
   wireGallery();
   wireEvolutionClicks();
+  updateCategoryTranslation(p);
+}
+
+// La catégorie ("Pokémon Flamme"...) n'existe qu'en français chez Tyradex :
+// on va chercher sa traduction sur PokeAPI en tâche de fond et on la
+// substitue une fois reçue, sans bloquer l'ouverture de la fiche (elle
+// affiche d'abord la version française, remplacée dès que possible).
+function updateCategoryTranslation(p) {
+  if (CURRENT_LANG === "fr" || !p.category) return;
+  const requestedId = p.pokedex_id;
+  const requestedLang = CURRENT_LANG;
+  PokeApiSpecies.getCategory(requestedId, requestedLang).then(translated => {
+    if (!translated) return;
+    // La modal a pu être fermée, changée de Pokémon, ou la langue changée
+    // entre-temps : on n'applique le résultat que s'il est encore pertinent.
+    if (Number(modalContent.dataset.currentId) !== requestedId) return;
+    if (CURRENT_LANG !== requestedLang) return;
+    const el = document.getElementById("pokeCategory");
+    if (el) el.textContent = translated;
+  });
 }
 
 async function openPokemonModal(pokedexId) {
   modalOverlay.hidden = false;
   document.body.style.overflow = "hidden";
-  modalContent.innerHTML = `<div class="modal-loading">Chargement...</div>`;
+  modalContent.innerHTML = `<div class="modal-loading">${t("modalLoading")}</div>`;
 
   const p = findPokemon(pokedexId);
   if (!p) {
-    modalContent.innerHTML = `<p class="no-data">Impossible de charger ce Pokémon.</p>`;
+    modalContent.innerHTML = `<p class="no-data">${t("modalLoadError")}</p>`;
     return;
   }
   renderModalBody(p);

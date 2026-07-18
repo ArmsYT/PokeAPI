@@ -38,6 +38,16 @@ function chooseLang(lang) {
   setCurrentLang(lang);
   syncLangTriggerLabel();
   closeLangMenu();
+
+  // Retraduit tout le texte "chrome" de l'interface : éléments statiques
+  // (data-i18n*), les options dynamiques "Génération N", puis resynchronise
+  // les selects custom (leur libellé ne suit pas automatiquement un simple
+  // changement de texte d'<option>) et enfin les vues qui dépendent de t().
+  applyStaticTranslations();
+  updateSentinelLoadingText();
+  if (AppState.all.length) populateGenSelect();
+  retranslateTypeOptions();
+  refreshAllCustomSelects();
   refreshView({ resetPage: false });
   refreshOpenModalIfAny();
 }
