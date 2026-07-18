@@ -50,6 +50,7 @@ function chooseLang(lang) {
   refreshAllCustomSelects();
   refreshView({ resetPage: false });
   refreshOpenModalIfAny();
+  refreshChangelogIfLoaded();
 }
 
 if (langTrigger && langMenu) {

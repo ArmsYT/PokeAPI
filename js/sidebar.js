@@ -66,6 +66,7 @@ document.addEventListener("keydown", (e) => {
 
 // ---- Changelog : chargement des fichiers markdown datés ----
 let changelogLoaded = false;
+let changelogEntriesCache = null; // [{ dateStr, frText }], rempli une seule fois (source FR)
 
 // Les fichiers de changelog sont nommés "AAAA-MM-JJ-HH-mm-ss.md" : les secondes
 // servent uniquement à garantir un nom de fichier unique par modification
@@ -76,6 +77,36 @@ function formatChangelogDate(stamp) {
   if (!match) return stamp;
   const [, year, month, day, h = "00", m = "00"] = match;
   return `${h}:${m} ${day}/${month}/${year}`;
+}
+
+// Chaque fichier de changelog est écrit en français (source canonique). Si une
+// traduction existe pour la langue courante dans CHANGELOG_TRANSLATIONS, on
+// l'utilise à la place ; sinon on retombe sur le texte français d'origine.
+function changelogTextForCurrentLang(dateStr, frText) {
+  const translated = typeof CHANGELOG_TRANSLATIONS !== "undefined"
+    ? CHANGELOG_TRANSLATIONS[dateStr]?.[CURRENT_LANG]
+    : null;
+  return translated || frText;
+}
+
+function renderChangelogEntries() {
+  if (!changelogEntriesCache) return;
+  const html = changelogEntriesCache.map(e => {
+    const text = changelogTextForCurrentLang(e.dateStr, e.frText);
+    const parsedHtml = window.marked ? marked.parse(text) : `<pre>${escapeHtml(text)}</pre>`;
+    return `
+      <div class="changelog-entry">
+        <span class="changelog-date">${escapeHtml(formatChangelogDate(e.dateStr))}</span>
+        ${parsedHtml}
+      </div>`;
+  }).join("") || `<p class="no-data">${t("changelogEmpty")}</p>`;
+  changelogContent.innerHTML = html;
+}
+
+// Si le changelog a déjà été chargé, on le re-rend dans la nouvelle langue
+// (appelé depuis lang.js lors d'un changement de langue).
+function refreshChangelogIfLoaded() {
+  if (changelogLoaded) renderChangelogEntries();
 }
 
 async function loadChangelog() {
@@ -89,19 +120,14 @@ async function loadChangelog() {
 
     const sorted = [...files].sort((a, b) => b.localeCompare(a)); // dates récentes en premier
 
-    const entries = await Promise.all(sorted.map(async (filename) => {
+    changelogEntriesCache = await Promise.all(sorted.map(async (filename) => {
       const r = await fetch(`changelogs/${filename}`);
       const text = r.ok ? await r.text() : "*Erreur de chargement.*";
       const dateStr = filename.replace(/\.md$/i, "");
-      return { dateStr, html: window.marked ? marked.parse(text) : `<pre>${escapeHtml(text)}</pre>` };
+      return { dateStr, frText: text };
     }));
 
-    changelogContent.innerHTML = entries.map(e => `
-      <div class="changelog-entry">
-        <span class="changelog-date">${escapeHtml(formatChangelogDate(e.dateStr))}</span>
-        ${e.html}
-      </div>`).join("") || `<p class="no-data">${t("changelogEmpty")}</p>`;
-
+    renderChangelogEntries();
     changelogLoaded = true;
   } catch (err) {
     changelogContent.innerHTML = `<p class="no-data">${t("changelogError", { error: escapeHtml(err.message) })}</p>`;
