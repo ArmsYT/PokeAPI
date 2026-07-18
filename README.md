@@ -1,108 +1,54 @@
-# Pokémon API
+# PokéDex — Tyradex
 
----
+Un PokéDex complet en HTML / CSS / JS natifs, propulsé par l'API française gratuite [Tyradex](https://tyradex.app).
 
-## ✨ Fonctionnalités
+Pensé pour être hébergé gratuitement sur **GitHub Pages** (aucune étape de build nécessaire).
 
-- **Modal détaillé** : sprites *Normal*, *Shiny*, formes, **Méga** et **GigaMax**
-- **Types / résistances / faiblesses** avec icônes + infobulles
-- **Stats de base**, talents & évolutions
-- **Recherche temps réel** (par **ID** et **nom**)
-- **Pagination** : 10 / 25 / 50 / 100 / **Tout**
-- **Sidebar fixe**
-- **Navigation** : About & Changelog
+## Fonctionnalités
 
----
+- Barre de recherche (nom ou numéro de Pokédex), raccourci **Ctrl+K** / Cmd+K
+- Filtres : nombre de Pokémon par page (15 / 30 / 60 / Tout avec chargement progressif au scroll), ordre (ID, nom, attaque, défense, vitesse, PV), type, génération
+- Mode clair & sombre (persisté)
+- Menus déroulants entièrement custom (stylés, sans dépendre du rendu natif du système)
+- Image de secours automatique (via une API externe) si un sprite est manquant ou cassé
+- Sidebar fixe : lien vers l'API, page À propos, Changelog (basé sur des fichiers Markdown horodatés), profil GitHub + licence
+- Fiche détaillée au clic sur une carte : galerie d'images (normal, shiny, gigamax, méga...), infos complètes, statistiques, talents, faiblesses/résistances, chaîne d'évolution cliquable
 
-## 🗂️ Arborescence
+## Structure
 
-```bash
-.
-├── index.html # page principale (grille + modal)
-├── README.md # Read me du projet
-├── LICENSE # License MIT
-└── src/
-     ├── css/
-     │    ├── tokens.css # variables / design tokens
-     │    ├── base.css # reset & fond
-     │    ├── toolbar.css # barre d’outils (top)
-     │    ├── card.css # style des cartes
-     │    ├── details.css # listes, stats, résistances, types
-     │    ├── modal.css # modal + scrollbar custom
-     │    ├── sidebar.css # sidebar fixe + carte GitHub
-     │    └── responsive.css # ajustements mobiles
-     ├── img/
-     │    └── pokeball.png # Icône du site
-     ├── pages/
-     │    ├── about.html
-     │    └── changelog.html
-     └── js/
-          ├── cards.js # Affichage des cartes
-          ├── details.js # Affichages des informations en plus de la carte
-          ├── dom.js 
-          ├── modal.js # Ouverture / Fermeture du modal des informations
-          ├── pagination.js
-          ├── script.js 
-          ├── search.js # recherche temps réel (ID + nom)
-          ├── sidebar.js # sidebar + dispatcher d’actions + GitHub
-          ├── sprites.js
-          ├── types.js
-          └── utils.js # helpers (DOM, formatage, fetch, etc.)
+```
+index.html
+css/style.css
+js/
+  theme.js         thème clair/sombre
+  api.js           appels à l'API Tyradex + cache + image de secours
+  utils.js         helpers partagés (types, slugs, fallback image, etc.)
+  render.js        grille, recherche/filtres/tri, pagination & scroll infini
+  modal.js         fiche détaillée d'un Pokémon
+  sidebar.js       navigation, À propos, Changelog
+  customSelect.js  menus déroulants custom (remplace les <select> natifs)
+  app.js           initialisation
+changelogs/
+  index.json                     liste des fichiers de changelog
+  AAAA-MM-JJ_HH-mm-ss.md         une entrée par modification
 ```
 
-> Si certains modules ne sont pas encore séparés chez toi, tu peux conserver un seul `script.js` et migrer progressivement.
+## Ajouter une entrée de changelog
 
----
+1. Crée un fichier `changelogs/AAAA-MM-JJ_HH-mm-ss.md` (un fichier par modification) avec le contenu en Markdown.
+2. Ajoute le nom du fichier dans `changelogs/index.json`.
+3. L'entrée s'affichera automatiquement triée par date/heure, au format `JJ:MM:AAAA HH:MM` (les secondes du nom de fichier ne servent qu'à éviter les doublons, elles ne sont pas affichées).
 
-## 🔌 Données & API
+## Déploiement sur GitHub Pages
 
-- Source : [**TyraDex**](https://tyradex.vercel.app/) Endpoint principal utilisé : [`https://tyradex.vercel.app/api/v1/pokemon`](https://tyradex.vercel.app/)
-- Les sprites (normal/shiny/mega/gmax) sont fournis par TyraDex (GitHub raw CDNs).
-- Un fallback est prévu lorsque certaines URLs sont manquantes.
+1. Pousse ce dossier sur un dépôt GitHub.
+2. Settings → Pages → Source : branche `main`, dossier `/root`.
+3. Le site est servi statiquement, aucune compilation requise.
 
----
+## Crédits
 
-## 🚀 Installation & lancement
+Données Pokémon fournies par [Tyradex](https://tyradex.app) (sources : Poképédia & Serebii). Pokémon et tous les noms respectifs sont des marques déposées de The Pokémon Company International, Game Freak et Nintendo.
 
-1. **Cloner**
-  ```bash
-  git clone https://github.com/ArmsYT/PokeAPI.git
-  cd PokeAPI
-  ```
+## Licence
 
----
-
-
-## 🧭 Utilisation
-
-- Recherche : tape un ID (ex. 6) ou un nom (ex. dracau) → la grille se filtre en temps réel.
-- Voir + sur une carte → ouvre le modal détaillé.
-- Sidebar : actions de pagination.
-
----
-
-## ⚡ Performance
-
-- Lazy images (loading="lazy")
-- Rendu DOM par fragments
-- Fallback offline pour la carte GitHub (pas de “trou” visuel)
-- CSS modulaire, uniquement ce qu’il faut par page
-
----
-
-## 📜 Licence & 🛡️ Mentions
-
-Code sous [MIT LICENSE](https://github.com/ArmsYT/PokeAPI/blob/main/LICENSE).
-Disclaimer : Projet non officiel. Pokémon et les noms associés sont des marques déposées de leurs propriétaires respectifs. Les visuels et données sont fournis à titre informatif via l’API publique TyraDex.
-
----
-
-## 🙌 Crédits
-
-- Données & sprites : [TyraDex](https://tyradex.vercel.app/)
-- Design & intégration : [ArmsYT](https://www.github.com/ArmsYT)
-
----
-
-## 📧 Contact
-Pour toutes questions, suggestions ou contributions: 📩 [Arms](mailto:armsgfx@gmail.com).
+MIT — voir [LICENSE](LICENSE).
